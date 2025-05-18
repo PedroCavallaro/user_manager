@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  background-color: black;
+}
+
+.font-title {
+  @apply font-geist text-3xl font-extrabold  text-white
+}
+
+.font-body {
+  @apply font-geist text-lg text-white
+}
+
+.font-body1 {
+  @apply font-geist text-lg font-bold  text-white
+}
+
+.font-caption {
+  @apply font-geist font-medium 
+}
+
+.desktop-layout {
+  @apply mx-auto w-full p-6 sm:max-w-screen-sm md:max-w-screen-lg lg:max-w-screen-xl
+}
