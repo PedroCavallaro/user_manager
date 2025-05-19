@@ -1,6 +1,16 @@
 
 O projeto ficou bem interessante, utilizei a Clen Arch para todo o backend, e para o front o design dos componentes foi feito seguindo o composition. Explico mais nos tópicos abaixo.
 
+O projeto está hospedado em: http://77.37.40.187:3000/
+por não ter domínio, o google não permite fazer login com oauth, porém todo o resto funciona normal
+
+tem cerca de 20 usuários cadastrados para teste, eles variam de user pra admin
+usuários com email impár: teste1@gmail.com tem cargo USER usuários com email par teste2@gmail.com tem função ADMIN
+
+exemplo de login
+email: teste1@gmail.com 
+senha: 12345678 -- todos tem essa senha
+
 ## Configurações (envs)
 
 No backend é só copiar o .env.example e o renomear para .env.
@@ -21,13 +31,14 @@ docker compose up -d
 
 \*\*\*Importante: o docker compose também sobe o banco e o redis, se for rodar com o npm, rode o docker compose que está dentro da pasta backend, esse sobe apenas o banco e o redis
 
+
 para o front apenas rode
 
 ```
 npm run start
 ```
 
-e para o backend
+para o backend primeiro rode o comando npm run migration:run e depois
 
 ```
 npm run start:dev
