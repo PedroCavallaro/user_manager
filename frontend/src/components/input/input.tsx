@@ -14,19 +14,22 @@ type InputProps = HTMLAttributes<HTMLDivElement> & {
   variant?: Variants;
 };
 
-function Input({ children, variant = 'primary', ...rest }: InputProps) {
+function Input({ children, variant = 'primary', error, ...rest }: InputProps) {
   return (
-    <div
-      className={clsx(
-        'h-12 w-full flex flex-row items-center justify-center gap-2 rounded-lg px-2',
-        {
-          'border-[1px] border-zinc-200/20': variant === 'primary',
-          'bg-black': variant === 'secondary',
-        }
-      )}
-      {...rest}
-    >
-      {children}
+    <div className="w-full flex flex-col">
+      <div
+        className={clsx(
+          'h-12 w-full flex flex-row items-center justify-center gap-2 rounded-lg px-2',
+          {
+            'border-[1px] border-zinc-200/20': variant === 'primary',
+            'bg-black': variant === 'secondary',
+          }
+        )}
+        {...rest}
+      >
+        {children}
+      </div>
+      {error && <span className="text-red-500 font-geist">{error}</span>}
     </div>
   );
 }
