@@ -1,5 +1,0 @@
-
-ajeitar o update, para atualizar o usuário no front
-login com google
-docker 
-deletar e atualizar user

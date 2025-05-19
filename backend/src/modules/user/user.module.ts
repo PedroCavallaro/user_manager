@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RoleGuard } from 'src/guards'
+import { HashStrategy, TokenStrategy } from '../auth/strategies'
 import { User, UserLog } from './entities'
 import { UserController } from './http/user.controller'
 import { USER_LOG_QUEUE } from './infra/queue/keys'
@@ -25,7 +26,14 @@ import { userUseCases } from './usecases'
     })
   ],
   controllers: [UserController],
-  providers: [RoleGuard, UserRepository, UserLogRepository, ...userUseCases],
+  providers: [
+    RoleGuard,
+    UserRepository,
+    UserLogRepository,
+    HashStrategy,
+    TokenStrategy,
+    ...userUseCases
+  ],
   exports: [UserRepository]
 })
 export class UserModule {}

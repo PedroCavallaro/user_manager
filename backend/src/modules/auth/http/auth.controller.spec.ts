@@ -3,7 +3,7 @@ import { ThrottlerModule } from '@nestjs/throttler'
 import { Response } from 'express'
 import { AuthController, CreateUserDTO, LoginDTO, RefreshTokensDTO } from 'src/modules'
 import { TokenStrategy } from 'src/modules/auth/strategies'
-import { CreateUserUseCase, LoginUseCase } from 'src/modules/auth/use-cases'
+import { CreateUserUseCase, LoginUseCase, SocialLoginUseCase } from 'src/modules/auth/use-cases'
 import { mockUseCase } from 'test/mocks/use-case'
 
 describe('AuthController', () => {
@@ -28,6 +28,7 @@ describe('AuthController', () => {
       providers: [
         mockUseCase(LoginUseCase),
         mockUseCase(CreateUserUseCase),
+        mockUseCase(SocialLoginUseCase),
         {
           provide: TokenStrategy,
           useValue: {
@@ -43,78 +44,86 @@ describe('AuthController', () => {
     tokenStrategy = module.get(TokenStrategy)
   })
 
-  it('should register a user', async () => {
-    const dto: CreateUserDTO = {
-      name: 'Test User',
-      email: 'test@email.com',
-      password: '123456'
-    }
+  describe('register', () => {
+    it('should register a user', async () => {
+      const dto: CreateUserDTO = {
+        name: 'Test User',
+        email: 'test@email.com',
+        password: '123456'
+      }
 
-    const result = { token: 'token', refresh: 'refresh' }
+      const result = { token: 'token', refresh: 'refresh' }
 
-    jest.spyOn(createUserUseCase, 'execute').mockResolvedValue(result)
+      jest.spyOn(createUserUseCase, 'execute').mockResolvedValue(result)
 
-    const response = await controller.register(dto)
+      const response = await controller.register(dto)
 
-    expect(createUserUseCase.execute).toHaveBeenCalledWith(dto)
-    expect(response).toEqual(result)
-  })
-
-  it('Should login a user and return response', async () => {
-    const dto: LoginDTO = {
-      email: 'test@email.com',
-      password: '123456'
-    }
-
-    const result = { token: 'token', refresh: 'refresh' }
-
-    const req = { ip: '127.0.0.1' } as any
-    const sendMock = jest.fn()
-    const statusMock = jest.fn(() => ({ send: sendMock }))
-    const res = { status: statusMock } as unknown as Response
-
-    jest.spyOn(loginUseCase, 'execute').mockResolvedValue(result)
-
-    await controller.login(req, res, dto)
-
-    expect(loginUseCase.execute).toHaveBeenCalledWith({
-      login: dto,
-      ip: req.ip
+      expect(createUserUseCase.execute).toHaveBeenCalledWith(dto)
+      expect(response).toEqual(result)
     })
-    expect(statusMock).toHaveBeenCalledWith(200)
-    expect(sendMock).toHaveBeenCalledWith(result)
   })
 
-  it('Should handle login exception and return error response', async () => {
-    const dto: LoginDTO = {
-      email: 'test@email.com',
-      password: 'wrong-password'
-    }
+  describe('socialLogin', () => {})
 
-    const error = { status: 401, message: 'Unauthorized' }
+  describe('login', () => {
+    it('Should login a user and return response', async () => {
+      const dto: LoginDTO = {
+        email: 'test@email.com',
+        password: '123456'
+      }
 
-    const req = { ip: '127.0.0.1' } as any
-    const sendMock = jest.fn()
-    const statusMock = jest.fn(() => ({ send: sendMock }))
-    const res = { status: statusMock } as unknown as Response
+      const result = { token: 'token', refresh: 'refresh' }
 
-    jest.spyOn(loginUseCase, 'execute').mockRejectedValue(error)
+      const req = { ip: '127.0.0.1' } as any
+      const sendMock = jest.fn()
+      const statusMock = jest.fn(() => ({ send: sendMock }))
+      const res = { status: statusMock } as unknown as Response
 
-    await controller.login(req, res, dto)
+      jest.spyOn(loginUseCase, 'execute').mockResolvedValue(result)
 
-    expect(statusMock).toHaveBeenCalledWith(401)
-    expect(sendMock).toHaveBeenCalledWith({ ...error, name: undefined })
+      await controller.login(req, res, dto)
+
+      expect(loginUseCase.execute).toHaveBeenCalledWith({
+        login: dto,
+        ip: req.ip
+      })
+      expect(statusMock).toHaveBeenCalledWith(200)
+      expect(sendMock).toHaveBeenCalledWith(result)
+    })
+
+    it('Should handle login exception and return error response', async () => {
+      const dto: LoginDTO = {
+        email: 'test@email.com',
+        password: 'wrong-password'
+      }
+
+      const error = { status: 401, message: 'Unauthorized' }
+
+      const req = { ip: '127.0.0.1' } as any
+      const sendMock = jest.fn()
+      const statusMock = jest.fn(() => ({ send: sendMock }))
+      const res = { status: statusMock } as unknown as Response
+
+      jest.spyOn(loginUseCase, 'execute').mockRejectedValue(error)
+
+      await controller.login(req, res, dto)
+
+      expect(statusMock).toHaveBeenCalledWith(401)
+      expect(sendMock).toHaveBeenCalledWith({ ...error, name: undefined })
+    })
   })
 
-  it('Should refresh token', async () => {
-    const dto: RefreshTokensDTO = { refresh: 'refresh-token' }
-    const result = { token: 'new-token', refresh: 'new-refresh' }
+  describe('refresh', () => {
+    it('Should refresh token', async () => {
+      const dto: RefreshTokensDTO = { refresh: 'refresh-token' }
+      const result = { token: 'new-token', refresh: 'new-refresh' }
 
-    jest.spyOn(tokenStrategy, 'refresh').mockResolvedValue(result)
+      jest.spyOn(tokenStrategy, 'refresh').mockResolvedValue(result)
 
-    const response = await controller.refresh(dto)
+      const response = await controller.refresh(dto)
 
-    expect(tokenStrategy.refresh).toHaveBeenCalledWith(dto.refresh)
-    expect(response).toEqual(result)
+      expect(tokenStrategy.refresh).toHaveBeenCalledWith(dto.refresh)
+      expect(response).toEqual(result)
+    })
   })
 })

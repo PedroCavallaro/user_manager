@@ -4,8 +4,8 @@ import { ThrottlerGuard } from '@nestjs/throttler'
 import { Request, Response } from 'express'
 import { Public } from 'src/common'
 import { TokenStrategy } from '../strategies'
-import { CreateUserUseCase, LoginUseCase } from '../use-cases'
-import { CreateUserDTO, LoginDTO, RefreshTokensDTO, TokensReponseDTO } from './dto'
+import { CreateUserUseCase, LoginUseCase, SocialLoginUseCase } from '../use-cases'
+import { CreateUserDTO, LoginDTO, RefreshTokensDTO, SocialLoginDTO, TokensReponseDTO } from './dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -13,6 +13,7 @@ export class AuthController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly loginUseCase: LoginUseCase,
+    private readonly socialLoginUseCase: SocialLoginUseCase,
     private readonly tokenStrategy: TokenStrategy
   ) {}
 
@@ -21,6 +22,15 @@ export class AuthController {
   @Post('/register')
   async register(@Body() body: CreateUserDTO) {
     const res = await this.createUserUseCase.execute(body)
+
+    return res
+  }
+
+  @Public()
+  @ApiOkResponse({ type: TokensReponseDTO })
+  @Post('/social')
+  async socialLogin(@Body() body: SocialLoginDTO) {
+    const res = await this.socialLoginUseCase.execute(body)
 
     return res
   }

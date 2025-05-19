@@ -7,6 +7,7 @@ interface UserJwtPayload {
   name: string
   email: string
   type: 'access' | 'refresh'
+  picture?: string
 }
 
 interface JwtPayload extends User {
@@ -25,6 +26,8 @@ declare global {
       PORT: string
       CACHE_PORT: number
       CACHE_HOST: string
+      GOOGLE_CLIENT_ID: string
+      GOOGLE_CLIENT_SECRET: string
       CACHE_URL: string
       JWT_SECRET: string
       JWT_EXPIRES_IN: string

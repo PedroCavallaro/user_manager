@@ -1,113 +1,148 @@
-import { jwtDecode } from "jwt-decode";
 import {
-	type ReactNode,
-	createContext,
-	useCallback,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../App";
-import { api } from "../api";
-import type { LoginDTO } from "../api/dto";
-import { Role, type User } from "../api/dto/user";
-import { safeDecode } from "../lib";
+  type ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../App';
+import { api } from '../api';
+import type { CreateAccountDTO, LoginDTO } from '../api/dto';
+import { Role, type User } from '../api/dto/user';
+import { tokenService } from '../services';
+import { useToast } from './toast.provider';
 
-type IAuthContext = {
-	login: (data: LoginDTO) => Promise<void>;
-	refresh: () => Promise<void>;
-	user?: User;
-};
+interface IAuthContext {
+  login: (data: LoginDTO) => Promise<void>;
+  refresh: () => Promise<void>;
+  register: (data: CreateAccountDTO) => Promise<void>;
+  socialLogin: (token: string) => Promise<void>;
+  user?: User;
+  setUser: (user: User) => void;
+}
 
 const AuthContext = createContext({} as IAuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User>();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
-	const navigate = useNavigate();
+  const isAuthRoute = useMemo(() => [ROUTES.login, ROUTES.register], []);
 
-	const isAuthRoute = [ROUTES.login, ROUTES.register];
+  console.log('asd');
+  const getUserFromLocalStorage = useCallback(() => {
+    const token = tokenService.getToken();
 
-	const getUserFromLocalStorage = useCallback(() => {
-		const token = localStorage.getItem("token");
+    const path = window.location.pathname;
 
-		const path = window.location.pathname;
+    if (!token && isAuthRoute.includes(path)) {
+      return;
+    }
 
-		if (!token && isAuthRoute.includes(path)) {
-			return;
-		}
+    const tokenData = tokenService.safeDecode<User>(token!);
 
-		const tokenData = safeDecode<User>(token!);
+    if (!tokenData && !isAuthRoute.includes(path)) {
+      return navigate(ROUTES.login);
+    }
 
-		if (!tokenData && !isAuthRoute.includes(path)) {
-			return navigate(ROUTES.login);
-		}
+    const navigateTo =
+      tokenData?.role === Role.ADMIN ? ROUTES.usersList : ROUTES.userDetails;
 
-		const navigateTo =
-			tokenData?.role === Role.ADMIN
-				? ROUTES.usersList
-				: ROUTES.userDetails(tokenData?.sub.toString());
+    setUser(tokenData!);
 
-		setUser(tokenData!);
+    if (tokenData && isAuthRoute.includes(path)) {
+      return navigate(navigateTo);
+    }
+  }, [navigate, setUser, isAuthRoute]);
 
-		if (tokenData && isAuthRoute.includes(path)) {
-			return navigate(navigateTo);
-		}
-	}, [navigate, setUser]);
+  const refresh = useCallback(async () => {
+    const { data, error } = await api.auth.refresh();
 
-	const refresh = useCallback(async () => {
-		const res = await api.auth.refresh();
+    if (error) return showToast(error);
 
-		const tokenData = safeDecode<User>(res.token);
+    const tokenData = tokenService.safeDecode<User>(data.token);
 
-		if (!tokenData) return;
+    if (!tokenData) return;
 
-		localStorage.setItem("token", res.token);
-		localStorage.setItem("refresh", res.refresh);
+    tokenService.setTokens(data.token, data.refresh);
 
-		console.log(tokenData);
-		setUser(tokenData);
-	}, [setUser]);
+    setUser(tokenData);
+  }, [setUser, showToast]);
 
-	const login = useCallback(
-		async (data: LoginDTO) => {
-			const res = await api.auth.login(data);
+  const login = useCallback(
+    async (loginDto: LoginDTO) => {
+      const { data, error } = await api.auth.login(loginDto);
 
-			const tokenData = safeDecode<User>(res.token);
+      if (error) return showToast(error);
 
-			if (!tokenData) return;
+      const tokenData = tokenService.safeDecode<User>(data.token);
 
-			localStorage.setItem("token", res.token);
-			localStorage.setItem("refresh", res.refresh);
+      if (!tokenData) return;
 
-			const navigateTo =
-				tokenData?.role === Role.ADMIN
-					? ROUTES.usersList
-					: ROUTES.userDetails(tokenData?.sub?.toString());
+      tokenService.setTokens(data.token, data.refresh);
 
-			setUser(tokenData);
+      const navigateTo =
+        tokenData?.role === Role.ADMIN ? ROUTES.usersList : ROUTES.userDetails;
 
-			navigate(navigateTo);
-		},
-		[user, setUser, navigate],
-	);
+      setUser(tokenData);
 
-	useEffect(() => {
-		getUserFromLocalStorage();
-	}, [getUserFromLocalStorage]);
+      navigate(navigateTo);
+    },
+    [setUser, navigate, showToast]
+  );
 
-	return (
-		<AuthContext.Provider
-			value={{
-				login,
-				refresh,
-				user,
-			}}
-		>
-			{children}
-		</AuthContext.Provider>
-	);
+  const socialLogin = useCallback(
+    async (token: string) => {
+      const { data, error } = await api.auth.socialLogin(token);
+
+      if (error) return showToast(error);
+
+      const tokenData = tokenService.safeDecode<User>(data.token);
+
+      if (!tokenData) return;
+
+      tokenService.setTokens(data.token, data.refresh);
+
+      setUser(tokenData);
+
+      navigate(ROUTES.userDetails);
+    },
+    [showToast, setUser, navigate]
+  );
+
+  const register = useCallback(
+    async (createAccountDTO: CreateAccountDTO) => {
+      const { error } = await api.auth.register(createAccountDTO);
+
+      if (error) return showToast(error);
+
+      navigate(ROUTES.login);
+    },
+    [navigate, showToast]
+  );
+
+  useEffect(() => {
+    getUserFromLocalStorage();
+  }, [getUserFromLocalStorage, showToast]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        login,
+        setUser,
+        register,
+        refresh,
+        socialLogin,
+        user,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => useContext(AuthContext);

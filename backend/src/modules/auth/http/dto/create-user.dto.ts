@@ -14,5 +14,9 @@ export class CreateUserDTO {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  password: string
+  password?: string
+
+  @IsString()
+  @IsOptional()
+  picture?: string
 }

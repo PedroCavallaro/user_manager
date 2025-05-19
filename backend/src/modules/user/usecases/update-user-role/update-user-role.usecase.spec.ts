@@ -45,7 +45,7 @@ describe('UpdateUserRoleUseCase', () => {
     userRepository.findUserBy.mockResolvedValueOnce(null)
     userRepository.findUserBy.mockResolvedValueOnce(null)
 
-    const error = new AppError('User not found', HttpStatus.UNAUTHORIZED)
+    const error = new AppError('Usuário não encontrado', HttpStatus.UNAUTHORIZED)
 
     await expect(
       useCase.execute({
@@ -61,7 +61,7 @@ describe('UpdateUserRoleUseCase', () => {
       .mockResolvedValueOnce(user)
       .mockResolvedValueOnce(admin)
 
-    const error = new AppError('User does not haver enough permissions', HttpStatus.UNAUTHORIZED)
+    const error = new AppError('Usuário não tem permissões suficientes', HttpStatus.UNAUTHORIZED)
 
     await expect(
       useCase.execute({

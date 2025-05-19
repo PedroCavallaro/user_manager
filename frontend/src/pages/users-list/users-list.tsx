@@ -52,7 +52,7 @@ export function UsersList() {
 				</span>
 			</Input>
 			<UsersListFilters query={query} handleQuery={handleQuery} />
-			<UsersTable users={users} query={query} handleQuery={setQuery} />
+			<UsersTable users={users?.data} query={query} handleQuery={setQuery} />
 		</div>
 	);
 }

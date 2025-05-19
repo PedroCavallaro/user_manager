@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm'
 import { IPagination, Pagination } from 'src/common'
 import { UserJwtPayload } from 'src/global'
 import { RoleGuard } from 'src/guards'
+import { TokensReponseDTO } from 'src/modules/auth'
 import { mockUseCase } from 'test/mocks/use-case'
 import { makeMockUser } from 'test/mocks/user'
 import {
@@ -107,9 +108,12 @@ describe('User controller', () => {
     it('should update user info', async () => {
       const user = { sub: 1 } as UserJwtPayload
       const body: UpdateUserDTO = { name: 'name' }
-      const updatedUser = makeMockUser({ name: 'name', email: 'email@email.com' })
+      const tokens: TokensReponseDTO = {
+        token: 'token',
+        refresh: 'refresh'
+      }
 
-      jest.spyOn(updateUserInfoUseCase, 'execute').mockResolvedValue(updatedUser)
+      jest.spyOn(updateUserInfoUseCase, 'execute').mockResolvedValue(tokens)
 
       const result = await controller.updateUserInfo(user, body)
 
@@ -118,7 +122,7 @@ describe('User controller', () => {
         update: body
       })
 
-      expect(result).toBe(updatedUser)
+      expect(result).toBe(tokens)
     })
   })
 

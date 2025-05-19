@@ -1,11 +1,11 @@
-import { z } from 'zod'
-import { zExt } from '../../../utils'
+import { z } from 'zod';
+import { zExt } from '../../../lib';
 
 export const LoginSchema = z.object({
   email: zExt.string().email('Formato inválido'),
   password: zExt.string({
-    min: 8
-  })
-})
+    min: 8,
+  }),
+});
 
-export type LoginDTO = z.infer<typeof LoginSchema>
+export type LoginDTO = z.infer<typeof LoginSchema>;

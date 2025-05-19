@@ -26,10 +26,11 @@ export class UpdateUserRoleUseCase implements UseCase<Input, User> {
       this.userRepository.findUserBy({ id: params.target.userId })
     ])
 
-    if (!targetUser || !requestor) throw new AppError('User not found', HttpStatus.UNAUTHORIZED)
+    if (!targetUser || !requestor)
+      throw new AppError('Usuário não encontrado', HttpStatus.UNAUTHORIZED)
 
     if (RoleWeight[requestor.role] < RoleWeight[targetUser.role]) {
-      throw new AppError('User does not haver enough permissions', HttpStatus.UNAUTHORIZED)
+      throw new AppError('Usuário não tem permissões suficientes', HttpStatus.UNAUTHORIZED)
     }
 
     const updated = await this.userRepository.update(params.target.userId, {

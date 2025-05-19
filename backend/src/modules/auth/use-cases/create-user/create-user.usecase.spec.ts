@@ -73,7 +73,7 @@ describe('Create User Use Case', () => {
   it('Should throw an error if user exists ', async () => {
     jest.spyOn(userRepository, 'findUserBy').mockResolvedValue(input as User)
 
-    const error = new AppError('User already exists', HttpStatus.FORBIDDEN)
+    const error = new AppError('Usuário já existe', HttpStatus.FORBIDDEN)
 
     await expect(useCase.execute(input)).rejects.toThrow(error)
   })

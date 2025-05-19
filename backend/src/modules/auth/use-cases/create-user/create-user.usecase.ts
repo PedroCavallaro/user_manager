@@ -18,11 +18,10 @@ export class CreateUserUseCase implements UseCase<CreateUserDTO, TokensReponseDT
     })
 
     if (user) {
-      throw new AppError('User already exists', HttpStatus.FORBIDDEN)
+      throw new AppError('Usuário já existe', HttpStatus.FORBIDDEN)
     }
 
-    console.log(params.password)
-    const hashedPassword = await this.hashStrategy.hash(params.password)
+    const hashedPassword = await this.hashStrategy.hash(params.password!)
 
     user = await this.userRepository.createUser({
       ...params,

@@ -8,7 +8,8 @@
   },
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/$1",
-    "^test/mocks/(.*)$": "<rootDir>/../test/mocks/$1"
+    "^test/mocks/(.*)$": "<rootDir>/../test/mocks/$1",
+    "^test/automation/(.*)$": "<rootDir>/../test/automation/$1"
   },
   "testTimeout": 50000
 }

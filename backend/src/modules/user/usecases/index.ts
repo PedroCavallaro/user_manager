@@ -1,3 +1,4 @@
+import { CreateNewUserUseCase } from './create-new-user/create-new-user.usecase'
 import { DeleteUserUseCase } from './delete-user/delete-user.usecase'
 import { GetInactiveUsersUseCase } from './get-inactive-users/get-inactive-users.usecase'
 import { GetUsersListUseCase } from './get-users-list/get-users-list.usecase'
@@ -9,11 +10,13 @@ export * from './delete-user/delete-user.usecase'
 export * from './update-user-info/update-user-info.usecase'
 export * from './update-user-role/update-user-role.usecase'
 export * from './get-inactive-users/get-inactive-users.usecase'
+export * from './create-new-user/create-new-user.usecase'
 
 export const userUseCases = [
   GetUsersListUseCase,
   DeleteUserUseCase,
   UpdateUserInfoUseCase,
   GetInactiveUsersUseCase,
-  UpdateUserRoleUseCase
+  UpdateUserRoleUseCase,
+  CreateNewUserUseCase
 ]

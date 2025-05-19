@@ -24,10 +24,11 @@ export class DeleteUserUseCase implements UseCase<Input, undefined> {
       this.userRepository.findUserBy({ id: params.userId })
     ])
 
-    if (!targetUser || !requestor) throw new AppError('User not found', HttpStatus.UNAUTHORIZED)
+    if (!targetUser || !requestor)
+      throw new AppError('Usuário não encontrado', HttpStatus.UNAUTHORIZED)
 
     if (RoleWeight[requestor.role] < RoleWeight[targetUser.role]) {
-      throw new AppError('User does not have enough permissions', HttpStatus.UNAUTHORIZED)
+      throw new AppError('Usuário não tem permissões suficientes', HttpStatus.UNAUTHORIZED)
     }
 
     await this.userRepository.delete(params.userId)

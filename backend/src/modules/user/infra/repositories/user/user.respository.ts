@@ -27,7 +27,8 @@ export class UserRepository {
       name: dto.name,
       email: dto.email,
       role: Role.USER,
-      password: dto.password
+      password: dto.password,
+      profileImage: dto.picture
     })
 
     return user
@@ -80,8 +81,9 @@ export class UserRepository {
     const { skip, take } = query.getSkipAndTake()
 
     const order = query?.sortBy ?? 'id'
+    const days = query?.days ?? 30
 
-    const inactiveSince = new Date(Date.now() - query.days! * 24 * 60 * 60 * 1000)
+    const inactiveSince = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 
     const users = await this.userRepository.find({
       where: {

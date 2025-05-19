@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { TokensReponseDTO } from 'src/modules/auth'
+import { TokenStrategy } from 'src/modules/auth/strategies'
 import { User } from '../../entities'
 import { UpdateUserDTO } from '../../http'
 import { UserRepository } from '../../infra/repositories'
@@ -6,6 +8,7 @@ import { UpdateUserInfoUseCase } from './update-user-info.usecase'
 
 describe('UpdateUserInfoUseCase', () => {
   let useCase: UpdateUserInfoUseCase
+  let tokenStrategy: TokenStrategy
   let userRepository: jest.Mocked<UserRepository>
 
   const mockUser: User = {
@@ -20,6 +23,12 @@ describe('UpdateUserInfoUseCase', () => {
       providers: [
         UpdateUserInfoUseCase,
         {
+          provide: TokenStrategy,
+          useValue: {
+            getTokens: jest.fn()
+          }
+        },
+        {
           provide: UserRepository,
           useValue: {
             update: jest.fn()
@@ -29,6 +38,7 @@ describe('UpdateUserInfoUseCase', () => {
     }).compile()
 
     useCase = module.get(UpdateUserInfoUseCase)
+    tokenStrategy = module.get(TokenStrategy)
     userRepository = module.get(UserRepository)
   })
 
@@ -41,7 +51,13 @@ describe('UpdateUserInfoUseCase', () => {
       } satisfies UpdateUserDTO
     }
 
+    const tokens: TokensReponseDTO = {
+      token: 'token',
+      refresh: 'refresh'
+    }
+
     jest.spyOn(userRepository, 'update').mockResolvedValue(mockUser)
+    jest.spyOn(tokenStrategy, 'getTokens').mockResolvedValue(tokens)
 
     const result = await useCase.execute(input)
 
@@ -50,6 +66,6 @@ describe('UpdateUserInfoUseCase', () => {
       password: input.update.password
     })
 
-    expect(result).toEqual(mockUser)
+    expect(result).toEqual(tokens)
   })
 })

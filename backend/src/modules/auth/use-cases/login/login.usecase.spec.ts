@@ -75,7 +75,7 @@ describe('Login Use Case', () => {
   it('Should throw an error if user not exists ', async () => {
     jest.spyOn(userRepository, 'findUserBy').mockResolvedValue(null)
 
-    const error = new AppError('User not found', HttpStatus.FORBIDDEN)
+    const error = new AppError('Usuário não encontrado', HttpStatus.FORBIDDEN)
 
     await expect(useCase.execute(input)).rejects.toThrow(error)
   })
@@ -84,7 +84,7 @@ describe('Login Use Case', () => {
     jest.spyOn(userRepository, 'findUserBy').mockResolvedValue(mockUser)
     jest.spyOn(hash, 'verify').mockResolvedValue(false)
 
-    const error = new AppError('Incorrect password', HttpStatus.UNAUTHORIZED)
+    const error = new AppError('Senha incorreta', HttpStatus.UNAUTHORIZED)
 
     await expect(useCase.execute(input)).rejects.toThrow(error)
   })

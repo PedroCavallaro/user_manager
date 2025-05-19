@@ -25,13 +25,13 @@ export class LoginUseCase implements UseCase<Input, TokensReponseDTO> {
     })
 
     if (!user) {
-      throw new AppError('User not found', HttpStatus.NOT_FOUND)
+      throw new AppError('Usuário não encontrado', HttpStatus.NOT_FOUND)
     }
 
     const passwordMatch = await this.hashStrategy.verify(login.password, user.password)
 
     if (!passwordMatch) {
-      throw new AppError('Incorrect password', HttpStatus.UNAUTHORIZED)
+      throw new AppError('Senha incorreta', HttpStatus.UNAUTHORIZED)
     }
 
     if (user.lastIpUsed && ip !== user.lastIpUsed) {

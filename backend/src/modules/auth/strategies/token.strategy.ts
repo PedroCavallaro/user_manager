@@ -36,7 +36,7 @@ export class TokenStrategy extends PassportStrategy(Strategy) {
   }
 
   private createJwtPayload(
-    user: Pick<User, 'id' | 'email' | 'role' | 'name'>,
+    user: Pick<User, 'id' | 'email' | 'role' | 'name' | 'profileImage'>,
     config: {
       secret: string
       expiresIn: string
@@ -48,6 +48,7 @@ export class TokenStrategy extends PassportStrategy(Strategy) {
       email: user.email,
       role: user.role,
       name: user.name,
+      picture: user.profileImage,
       type: config.type
     }
 
@@ -64,11 +65,16 @@ export class TokenStrategy extends PassportStrategy(Strategy) {
       type: 'access'
     })
 
-    const refreshToken = this.createJwtPayload(user, {
-      secret: process.env.REFRESH_SECRET,
-      expiresIn: process.env.REFRESH_EXPIRES_IN,
-      type: 'refresh'
-    })
+    const refreshToken = this.jwtService.sign(
+      {
+        sub: user.id,
+        type: 'refresh'
+      },
+      {
+        secret: process.env.REFRESH_SECRET,
+        expiresIn: process.env.REFRESH_EXPIRES_IN
+      }
+    )
 
     const refreshKey = this._getRefreshKey(refreshToken)
     await this.cache.set(refreshKey, refreshToken)
