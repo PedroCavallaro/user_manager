@@ -58,7 +58,7 @@ Para os endpoints de listagem adicionei paginação, assim mesmo com uma base gi
 Utilizei o jwt, porém também implementei uma lógica de refresh token. Assim a aplicação também gerencia tokens, que ficam guardados no redis.
 
 ### Swagger
-o swagger com todas as requisições do backend fica em /api
+o swagger com todas as requisições do backend fica em /api, para as requests de user(tirando a de create user) é necessário um token de autenticação, para todas as request é necessário o header x-api-key que deve ser igual ao API_KY do .env
 ![image](https://github.com/user-attachments/assets/927863bd-ba30-4035-b7c3-ef6de7cfb93d)
 
 
