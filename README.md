@@ -81,7 +81,8 @@ Também adicionei um esquema de logs pra salvas as alterações que forem feitas
 
 ## Frontend
 
-\*\*\*Obs: A biblioteca que estava no doc do teste está deprecada, ao tentar utiliza-lá, o google retornava este erro:
+\*\*\*Obs: A biblioteca que estava no doc do teste está deprecada, ao tentar utiliza-lá, o google retornava este erro: ![image](https://github.com/user-attachments/assets/95ff39d6-925a-4937-b525-e1632d4dc5bc)
+
 
 Como já disse lá em cima, os componentes segume o design patter de composition, o que deixa eles bem mais flexíveis para trabalhar.
 
