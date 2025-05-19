@@ -26,13 +26,13 @@ export class UserRepository {
     return updated
   }
 
-  async createUser(dto: CreateUserDTO & CreateNewUserDTO): Promise<User> {
+  async createUser(dto: CreateUserDTO | CreateNewUserDTO): Promise<User> {
     const user = await this.userRepository.save({
       name: dto.name,
       email: dto.email,
-      role: dto?.role ?? Role.USER,
+      role: (dto as CreateNewUserDTO)?.role ?? Role.USER,
       password: dto.password,
-      profileImage: dto.picture
+      profileImage: (dto as CreateNewUserDTO)?.picture
     })
 
     return user
