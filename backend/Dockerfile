@@ -10,4 +10,4 @@ RUN npm run build
 
 EXPOSE 4000
 
-CMD [ "npm", "run", "migration:run", "&&"  "npm", "run", "start:prod"]
+CMD [ "npm", "run", "start:prod"]
