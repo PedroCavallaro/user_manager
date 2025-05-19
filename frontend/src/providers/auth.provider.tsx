@@ -33,7 +33,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthRoute = useMemo(() => [ROUTES.login, ROUTES.register], []);
 
-  console.log('asd');
   const getUserFromLocalStorage = useCallback(() => {
     const token = tokenService.getToken();
 
@@ -83,12 +82,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!tokenData) return;
 
+      setUser(tokenData);
+
       tokenService.setTokens(data.token, data.refresh);
 
       const navigateTo =
         tokenData?.role === Role.ADMIN ? ROUTES.usersList : ROUTES.userDetails;
-
-      setUser(tokenData);
 
       navigate(navigateTo);
     },
@@ -105,11 +104,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!tokenData) return;
 
-      tokenService.setTokens(data.token, data.refresh);
-
       setUser(tokenData);
 
-      navigate(ROUTES.userDetails);
+      const navigateTo =
+        tokenData?.role === Role.ADMIN ? ROUTES.usersList : ROUTES.userDetails;
+
+      tokenService.setTokens(data.token, data.refresh);
+
+      navigate(navigateTo);
     },
     [showToast, setUser, navigate]
   );

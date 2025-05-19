@@ -21,7 +21,6 @@ export class AuthRepository extends Repository {
   }
 
   async socialLogin(token: string) {
-    console.log(token);
     const res = await this.api.post<TokenResponseDTO>('/auth/social', {
       body: { token },
     });

@@ -21,18 +21,14 @@ export class UserRepository extends Repository {
   }
 
   async getUsersList(query: GetUserListQueryDTO) {
-    try {
-      const res = await this.api.get<PaginationDTO<GetUsersListReponseDTO>>(
-        '/user',
-        {
-          query: { ...query },
-        }
-      );
+    const res = await this.api.get<PaginationDTO<GetUsersListReponseDTO>>(
+      '/user',
+      {
+        query: { ...query },
+      }
+    );
 
-      return res;
-    } catch (e) {
-      console.log(e);
-    }
+    return res;
   }
 
   async updateUserInfo(data: UpdateUserInfoDTO) {
