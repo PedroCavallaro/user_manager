@@ -16,7 +16,7 @@ interface JwtPayload extends User {
 
 declare module 'express' {
   interface Request {
-    user: JwtPayload
+    user: UserJwtPayload
   }
 }
 

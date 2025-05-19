@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
 
     const userInfo = await this.userRepository.findOne({
       where: {
-        id: user.id
+        id: user.sub
       }
     })
 
