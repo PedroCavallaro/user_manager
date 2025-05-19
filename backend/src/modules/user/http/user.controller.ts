@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Query, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse } from '@nestjs/swagger'
-import { JwtPayload } from 'src/common'
+import { JwtPayload, Public } from 'src/common'
 import { ApiPaginatedResponse } from 'src/common/decorators/pagination-response.decorator'
 import { UserJwtPayload } from 'src/global'
 import { RoleGuard } from 'src/guards'
 import {
+  CreateNewUserUseCase,
   DeleteUserUseCase,
   GetInactiveUsersUseCase,
   GetUsersListUseCase,
@@ -12,6 +13,7 @@ import {
   UpdateUserRoleUseCase
 } from '../usecases'
 import {
+  CreateNewUserDTO,
   DeleteUserDTO,
   GetInactiveUsersListQueryDTO,
   GetInactiveUsersListReponseDTO,
@@ -28,7 +30,8 @@ export class UserController {
     private readonly getInactiveUsersListUseCase: GetInactiveUsersUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly updateUserUseInfoCase: UpdateUserInfoUseCase,
-    private readonly updateUserRoleUseCase: UpdateUserRoleUseCase
+    private readonly updateUserRoleUseCase: UpdateUserRoleUseCase,
+    private readonly createNewUserUseCase: CreateNewUserUseCase
   ) {}
 
   @ApiPaginatedResponse(GetUserListResponseDTO)
@@ -38,6 +41,13 @@ export class UserController {
     const res = await this.getUsersListUseCase.execute(query)
 
     return res
+  }
+
+  @ApiOkResponse()
+  @Public()
+  @Post('create')
+  async createUser(@Body() body: CreateNewUserDTO) {
+    await this.createNewUserUseCase.execute(body)
   }
 
   @ApiPaginatedResponse(GetInactiveUsersListReponseDTO)
