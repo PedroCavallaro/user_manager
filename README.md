@@ -57,6 +57,11 @@ Para os endpoints de listagem adicionei paginação, assim mesmo com uma base gi
 
 Utilizei o jwt, porém também implementei uma lógica de refresh token. Assim a aplicação também gerencia tokens, que ficam guardados no redis.
 
+### Swagger
+o swagger com todas as requisições do backend fica em /api
+![image](https://github.com/user-attachments/assets/927863bd-ba30-4035-b7c3-ef6de7cfb93d)
+
+
 ### Testes
 
 Os testes unitários e de integração foram implementados, para rodar utilize os comandos.
