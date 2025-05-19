@@ -5,7 +5,7 @@ O projeto ficou bem interessante, utilizei a Clen Arch para todo o backend, e pa
 O projeto está hospedado em: http://77.37.40.187:3000/
 por não ter domínio, o google não permite fazer login com oauth, porém todo o resto funciona normal
 
-tem cerca de 20 usuários cadastrados para teste, eles variam de user pra admin
+tem cerca de 10 usuários cadastrados para teste, eles variam de user pra admin
 usuários com email impár: teste1@gmail.com tem cargo USER usuários com email par teste2@gmail.com tem função ADMIN
 
 exemplo de login
