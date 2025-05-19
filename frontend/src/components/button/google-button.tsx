@@ -16,7 +16,12 @@ export function GoogleButton() {
   });
 
   return (
-    <Button isLoading={isLoading} onClick={() => login()} variant="secondary">
+    <Button
+      type="button"
+      isLoading={isLoading}
+      onClick={() => login()}
+      variant="secondary"
+    >
       <img src={googleLogo} alt="login com google" width={30} height={30} />
       <Button.Title>Continuar com o google</Button.Title>
     </Button>
