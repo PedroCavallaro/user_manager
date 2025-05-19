@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { CreateUserDTO } from 'src/modules/auth'
 import { User } from 'src/modules/user/entities'
 import { Role } from 'src/modules/user/enums'
-import { GetInactiveUsersListQueryDTO, GetUsersListQueryDTO } from 'src/modules/user/http'
+import {
+  CreateNewUserDTO,
+  GetInactiveUsersListQueryDTO,
+  GetUsersListQueryDTO
+} from 'src/modules/user/http'
 import { FindOneOptions, LessThan, Like, Repository } from 'typeorm'
 
 @Injectable()
@@ -22,11 +26,11 @@ export class UserRepository {
     return updated
   }
 
-  async createUser(dto: CreateUserDTO): Promise<User> {
+  async createUser(dto: CreateUserDTO & CreateNewUserDTO): Promise<User> {
     const user = await this.userRepository.save({
       name: dto.name,
       email: dto.email,
-      role: Role.USER,
+      role: dto?.role ?? Role.USER,
       password: dto.password,
       profileImage: dto.picture
     })
