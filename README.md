@@ -1,4 +1,3 @@
-# PROJETO
 
 O projeto ficou bem interessante, utilizei a Clen Arch para todo o backend, e para o front o design dos componentes foi feito seguindo o composition. Explico mais nos tópicos abaixo.
 
@@ -81,10 +80,15 @@ Utilizei a context api, e adicionei dois providers, um de auth que gerencia o es
 ### Telas mobile:
 
 (a tabela tem um scroll horizontal, e mais pra baixo tem como fazer paginação dos usuários)
-![[Pasted image 20250519053334.png]]
-![[Pasted image 20250519053451.png]]![[Pasted image 20250519053515.png]]![[Pasted image 20250519053532.png]]
+![Captura de tela de 2025-05-19 05-33-29](https://github.com/user-attachments/assets/1655cec9-0dfa-405b-a6e3-4091de1aa25c)
+![Captura de tela de 2025-05-19 05-34-10](https://github.com/user-attachments/assets/ea273ea6-e66c-4e37-8732-fea81085ba1a)
+![Captura de tela de 2025-05-19 05-34-45](https://github.com/user-attachments/assets/d08b9532-7c94-4503-93fd-e0f6b70d1458)
+![Captura de tela de 2025-05-19 05-35-08](https://github.com/user-attachments/assets/1a561ebb-bf79-4456-b307-82c4f7fcd4b7)
+![Captura de tela de 2025-05-19 05-35-29](https://github.com/user-attachments/assets/882b376c-335d-4eed-a96e-695dc4f25c45)
+
 
 ### Telas desktop
 
 as telas são as mesmas, só um pouco maiores kkk (o texto pode parecer pequeno, mas eu diminui o zoom para caber a tela toda)
-![[Pasted image 20250519053807.png]]![[Pasted image 20250519053955.png]]
+![Captura de tela de 2025-05-19 05-37-30](https://github.com/user-attachments/assets/63d9b8c7-4fbe-4b97-9e4d-b96c3281f7fd)
+![Captura de tela de 2025-05-19 05-39-35](https://github.com/user-attachments/assets/8cd9f0cd-0092-4f02-914d-0307f1969442)
